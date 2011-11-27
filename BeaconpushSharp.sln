@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeaconpushSharp", "BeaconpushSharp\BeaconpushSharp.csproj", "{911864E3-D09F-4D73-8661-7C5982CD2145}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeaconpushSharp.Tests", "BeaconpushSharp.Tests\BeaconpushSharp.Tests.csproj", "{C27B6731-3076-4D67-ACA0-D0A312CB23DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{911864E3-D09F-4D73-8661-7C5982CD2145}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{911864E3-D09F-4D73-8661-7C5982CD2145}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{911864E3-D09F-4D73-8661-7C5982CD2145}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C27B6731-3076-4D67-ACA0-D0A312CB23DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C27B6731-3076-4D67-ACA0-D0A312CB23DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C27B6731-3076-4D67-ACA0-D0A312CB23DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C27B6731-3076-4D67-ACA0-D0A312CB23DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

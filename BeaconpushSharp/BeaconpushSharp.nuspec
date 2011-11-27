@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/Hihaj/BeaconpushSharp/blob/master/license.txt</licenseUrl>
+    <projectUrl>https://github.com/Hihaj/BeaconpushSharp</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <copyright>Copyright 2011 Anders Fjeldstad</copyright>
+    <tags>Beaconpush websockets long-polling push</tags>
+  </metadata>
+</package>

@@ -2,8 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("BeaconpushSharp")]
+[assembly: AssemblyTitle("BeaconpushSharp.Tests")]
 [assembly: AssemblyConfiguration("")]
 [assembly: ComVisible(false)]
-[assembly: Guid("c0ab0cfe-127f-413e-a2bd-43ffcc82560b")]
-[assembly: InternalsVisibleTo("BeaconpushSharp.Tests")]
+[assembly: Guid("9128f6c9-9657-4a84-9563-8a1827fef1b0")]

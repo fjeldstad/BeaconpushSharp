@@ -6,6 +6,6 @@ namespace BeaconpushSharp
     {
         string Name { get; }
         void Send(object message);
-        IEnumerable<IUser> Users();
+        IUser[] Users();
     }
 }

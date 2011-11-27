@@ -9,6 +9,6 @@ namespace BeaconpushSharp
     {
         long OnlineUserCount();
         IChannel Channel(string name);
-        IUser User(string name);
+        IUser User(string username);
     }
 }
