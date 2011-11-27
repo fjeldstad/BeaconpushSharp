@@ -7,7 +7,7 @@ Examples
     var beacon = new Beacon("myApiKey", "mySecretKey");
     
     // Enumerate through all the users in a channel
-    User[] users = beacon.Channel("myChannel").Users();
+    IUser[] users = beacon.Channel("myChannel").Users();
     foreach (var user in users) 
     {
         Console.WriteLine(user.Username);
