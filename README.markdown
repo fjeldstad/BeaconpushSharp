@@ -7,14 +7,13 @@ Examples
     var beacon = new Beacon("myApiKey", "mySecretKey");
     
     // Enumerate through all the users in a channel
-    IEnumerable<IUser> users = beacon.Channel("myChannel").Users();
+    User[] users = beacon.Channel("myChannel").Users();
     foreach (var user in users) 
     {
         Console.WriteLine(user.Username);
     }
     
     // Send a message to a channel
-    beacon.Channel("myChannel").Send("Hello!");
     beacon.Channel("myChannel").Send(new 
     { 
         someMessage = "Hello again!",
@@ -32,7 +31,6 @@ Examples
     beacon.User("someUnfortunateUser").ForceSignOut();
     
     // Send a message to a user
-    beacon.User("awesomeUser").Send("You're awesome!");
     beacon.User("luckyWinner").Send(new 
     {
         amount = 1000,
