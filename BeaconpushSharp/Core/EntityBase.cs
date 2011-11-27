@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net;
+using BeaconpushSharp.ResponseData;
 
 namespace BeaconpushSharp.Core
 {
@@ -43,6 +45,41 @@ namespace BeaconpushSharp.Core
             _requestFactory = requestFactory;
             _jsonSerializer = jsonSerializer;
             _restClient = restClient;
-        } 
+        }
+
+        protected void ThrowOnUnexpectedStatusCode(IResponse response)
+        {
+            ThrowOnUnexpectedStatusCode(
+                response, 
+                HttpStatusCode.OK, 
+                HttpStatusCode.Created, 
+                HttpStatusCode.NoContent);
+        }
+
+        protected void ThrowOnUnexpectedStatusCode(IResponse response, params HttpStatusCode[] expectedStatusCodes)
+        {
+            if (response == null)
+            {
+                throw new ArgumentNullException("response");
+            }
+            if (expectedStatusCodes == null)
+            {
+                throw new ArgumentNullException("expectedStatusCodes");
+            }
+            if (!expectedStatusCodes.Any(status => status == response.Status))
+            {
+                ErrorData errorData = null;
+                try
+                {
+                    errorData = JsonSerializer.Deserialize<ErrorData>(response.Body);
+                }
+                catch {}
+                if (errorData != null)
+                {
+                    throw new BeaconpushException(errorData.status, errorData.message);
+                }
+                throw new BeaconpushException((int)response.Status, response.Body);
+            }
+        }
     }
 }

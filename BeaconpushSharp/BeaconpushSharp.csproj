@@ -46,6 +46,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Beacon.cs" />
+    <Compile Include="BeaconpushException.cs" />
     <Compile Include="Core\Channel.cs" />
     <Compile Include="Core\DefaultJsonSerializer.cs" />
     <Compile Include="Core\EntityBase.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Core\IRestClient.cs" />
     <Compile Include="IUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResponseData\ErrorData.cs" />
     <Compile Include="ResponseData\OnlineUserCountData.cs" />
     <Compile Include="ResponseData\UsersInChannelData.cs" />
     <Compile Include="StringExtensions.cs" />

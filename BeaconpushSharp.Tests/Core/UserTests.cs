@@ -96,15 +96,63 @@ namespace BeaconpushSharp.Tests.Core
         }
 
         [Test]
+        public void IsOnlineThrowsOnUnexpectedResponseStatus()
+        {
+            var user = GetUser("username");
+            var request = MockRepository.GenerateStub<IRequest>();
+            user.RequestFactory.Stub(r => r.CreateIsUserOnlineRequest(user.Username)).Return(request);
+            var response = new Response
+            {
+                Status = HttpStatusCode.BadRequest,
+                Body = "errorMessage"
+            };
+            var errorData = new ErrorData
+            {
+                status = (int)response.Status,
+                message = response.Body
+            };
+            user.JsonSerializer.Stub(j => j.Deserialize<ErrorData>(response.Body)).Return(errorData);
+            user.RestClient.Stub(r => r.Execute(request)).Return(response);
+
+            Assert.Throws<BeaconpushException>(() => user.IsOnline());
+        }
+
+        [Test]
         public void ForceSignOutExecutesCorrectRequest()
         {
             var user = GetUser("username");
             var request = MockRepository.GenerateStub<IRequest>();
             user.RequestFactory.Stub(r => r.CreateForceUserSignOutRequest(user.Username)).Return(request);
 
-            user.ForceSignOut();
+            try
+            {
+                user.ForceSignOut();
+            }
+            catch {}
 
             user.RestClient.AssertWasCalled(r => r.Execute(request));
+        }
+
+        [Test]
+        public void ForceSignOutThrowsOnUnexpectedResponseStatus()
+        {
+            var user = GetUser("username");
+            var request = MockRepository.GenerateStub<IRequest>();
+            user.RequestFactory.Stub(r => r.CreateForceUserSignOutRequest(user.Username)).Return(request);
+            var response = new Response
+            {
+                Status = HttpStatusCode.BadRequest,
+                Body = "errorMessage"
+            };
+            var errorData = new ErrorData
+            {
+                status = (int)response.Status,
+                message = response.Body
+            };
+            user.JsonSerializer.Stub(j => j.Deserialize<ErrorData>(response.Body)).Return(errorData);
+            user.RestClient.Stub(r => r.Execute(request)).Return(response);
+
+            Assert.Throws<BeaconpushException>(() => user.ForceSignOut());
         }
 
         [Test]
@@ -123,9 +171,36 @@ namespace BeaconpushSharp.Tests.Core
             var request = MockRepository.GenerateStub<IRequest>();
             user.RequestFactory.Stub(r => r.CreateSendMessageToUserRequest(user.Username, "message")).Return(request);
 
-            user.Send("message");
+            try
+            {
+                user.Send("message");
+            }
+            catch {}
 
             user.RestClient.AssertWasCalled(r => r.Execute(request));
+        }
+
+        [Test]
+        public void SendThrowsOnUnexpectedResponseStatus()
+        {
+            var user = GetUser("username");
+            user.JsonSerializer.Stub(j => j.Serialize("message")).Return("message");
+            var request = MockRepository.GenerateStub<IRequest>();
+            user.RequestFactory.Stub(r => r.CreateSendMessageToUserRequest(user.Username, "message")).Return(request);
+            var response = new Response
+                           {
+                               Status = HttpStatusCode.BadRequest,
+                               Body = "errorMessage"
+                           };
+            var errorData = new ErrorData
+                            {
+                                status = (int)response.Status,
+                                message = response.Body
+                            };
+            user.JsonSerializer.Stub(j => j.Deserialize<ErrorData>(response.Body)).Return(errorData);
+            user.RestClient.Stub(r => r.Execute(request)).Return(response);
+
+            Assert.Throws<BeaconpushException>(() => user.Send("message"));
         }
 
         private TestUser GetUser(string username)

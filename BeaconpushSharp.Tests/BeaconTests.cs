@@ -71,6 +71,28 @@ namespace BeaconpushSharp.Tests
         }
 
         [Test]
+        public void OnlineUserCountThrowsOnUnexpectedResponseStatus()
+        {
+            var beacon = GetBeacon();
+            var request = MockRepository.GenerateStub<IRequest>();
+            beacon.RequestFactory.Stub(r => r.CreateOnlineUserCountRequest()).Return(request);
+            var response = new Response
+            {
+                Status = HttpStatusCode.BadRequest,
+                Body = "errorMessage"
+            };
+            var errorData = new ErrorData
+            {
+                status = (int)response.Status,
+                message = response.Body
+            };
+            beacon.JsonSerializer.Stub(j => j.Deserialize<ErrorData>(response.Body)).Return(errorData);
+            beacon.RestClient.Stub(r => r.Execute(request)).Return(response);
+
+            Assert.Throws<BeaconpushException>(() => beacon.OnlineUserCount());
+        }
+
+        [Test]
         public void ChannelThrowsOnNullArgument()
         {
             var beacon = GetBeacon();

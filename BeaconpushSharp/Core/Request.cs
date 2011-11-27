@@ -1,13 +1,13 @@
-﻿using System.Net;
-using System;
+﻿using System;
+using System.Collections.Specialized;
 
 namespace BeaconpushSharp.Core
 {
     public class Request : IRequest
     {
-        private readonly WebHeaderCollection _headers = new WebHeaderCollection();
+        private readonly NameValueCollection _headers = new NameValueCollection();
 
-        public WebHeaderCollection Headers
+        public NameValueCollection Headers
         {
             get { return _headers; }
         }

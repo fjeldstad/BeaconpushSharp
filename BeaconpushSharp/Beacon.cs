@@ -20,6 +20,7 @@ namespace BeaconpushSharp
         {
             var request = RequestFactory.CreateOnlineUserCountRequest();
             var response = RestClient.Execute(request);
+            ThrowOnUnexpectedStatusCode(response);
             return JsonSerializer.Deserialize<OnlineUserCountData>(response.Body).online;
         }
 

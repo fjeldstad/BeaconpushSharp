@@ -11,6 +11,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>Copyright 2011 Anders Fjeldstad</copyright>
-    <tags>Beaconpush websockets long-polling push</tags>
+    <tags>Beaconpush WebSockets long-polling push</tags>
   </metadata>
 </package>

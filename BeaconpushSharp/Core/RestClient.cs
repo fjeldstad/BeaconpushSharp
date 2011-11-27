@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Text;
+using System.Collections.Specialized;
 
 namespace BeaconpushSharp.Core
 {
@@ -18,8 +20,7 @@ namespace BeaconpushSharp.Core
             }
             var httpRequest = (HttpWebRequest)WebRequest.Create(request.Url);
             httpRequest.Method = request.Method.ToString();
-            httpRequest.Headers.Clear();
-            httpRequest.Headers.Add(request.Headers);
+            SetHeaders(httpRequest, request.Headers);
             if (!request.Body.IsNullOrEmpty())
             {
                 var bodyBytes = Encoding.UTF8.GetBytes(request.Body);
@@ -28,8 +29,24 @@ namespace BeaconpushSharp.Core
                     requestStream.Write(bodyBytes, 0, bodyBytes.Length);
                 }
             }
-            var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
+            HttpWebResponse httpResponse = null;
             var response = new Response();
+            try
+            {
+                httpResponse = (HttpWebResponse)httpRequest.GetResponse();
+            } 
+            catch (WebException ex)
+            {
+                // Catch WebException to return the response and let
+                // the caller handle the status code.
+                if (ex.Response == null ||
+                    !(ex.Response is HttpWebResponse))
+                {
+                    throw;
+                }
+                httpResponse = (HttpWebResponse)ex.Response;
+            }
+
             response.Status = httpResponse.StatusCode;
             if (httpResponse.ContentLength > 0)
             {
@@ -37,12 +54,33 @@ namespace BeaconpushSharp.Core
                 {
                     if (responseStream != null)
                     {
-                        var bodyBytes = new byte[responseStream.Length];
-                        response.Body = Encoding.UTF8.GetString(bodyBytes);
+                        var reader = new StreamReader(responseStream, Encoding.UTF8);
+                        response.Body = reader.ReadToEnd();
                     }
                 }
             }
+
             return response;
+        }
+
+        protected static void SetHeaders(HttpWebRequest httpRequest, NameValueCollection headers)
+        {
+            httpRequest.Headers.Clear();
+            foreach (var name in headers.AllKeys)
+            {
+                switch (name)
+                {
+                    case "Content-Type":
+                        httpRequest.ContentType = headers[name];
+                        break;
+
+                    // TODO Add handling of more "protected" headers if needed (see http://msdn.microsoft.com/en-us/library/system.net.httpwebrequest.headers.aspx)
+
+                    default:
+                        httpRequest.Headers.Add(name, headers[name]);
+                        break;
+                }
+            }
         }
     }
 }

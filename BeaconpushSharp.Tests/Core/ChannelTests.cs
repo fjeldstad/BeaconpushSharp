@@ -62,9 +62,36 @@ namespace BeaconpushSharp.Tests.Core
             var request = MockRepository.GenerateStub<IRequest>();
             channel.RequestFactory.Stub(r => r.CreateSendMessageToChannelRequest(channel.Name, "message")).Return(request);
 
-            channel.Send("message");
+            try
+            {
+                channel.Send("message");
+            }
+            catch {}
 
             channel.RestClient.AssertWasCalled(r => r.Execute(request));
+        }
+
+        [Test]
+        public void SendThrowsOnUnexpectedResponseStatus()
+        {
+            var channel = GetChannel("name");
+            channel.JsonSerializer.Stub(j => j.Serialize("message")).Return("message");
+            var request = MockRepository.GenerateStub<IRequest>();
+            channel.RequestFactory.Stub(r => r.CreateSendMessageToChannelRequest(channel.Name, "message")).Return(request);
+            var response = new Response
+            {
+                Status = HttpStatusCode.BadRequest,
+                Body = "errorMessage"
+            };
+            var errorData = new ErrorData
+            {
+                status = (int)response.Status,
+                message = response.Body
+            };
+            channel.JsonSerializer.Stub(j => j.Deserialize<ErrorData>(response.Body)).Return(errorData);
+            channel.RestClient.Stub(r => r.Execute(request)).Return(response);
+
+            Assert.Throws<BeaconpushException>(() => channel.Send("message"));
         }
 
         [Test]
@@ -129,6 +156,28 @@ namespace BeaconpushSharp.Tests.Core
             var users = channel.Users();
 
             Assert.That(users, Is.Empty);
+        }
+
+        [Test]
+        public void UsersThrowsOnUnexpectedResponseStatus()
+        {
+            var channel = GetChannel("name");
+            var request = MockRepository.GenerateStub<IRequest>();
+            channel.RequestFactory.Stub(r => r.CreateUsersInChannelRequest(channel.Name)).Return(request);
+            var response = new Response
+            {
+                Status = HttpStatusCode.BadRequest,
+                Body = "errorMessage"
+            };
+            var errorData = new ErrorData
+            {
+                status = (int)response.Status,
+                message = response.Body
+            };
+            channel.JsonSerializer.Stub(j => j.Deserialize<ErrorData>(response.Body)).Return(errorData);
+            channel.RestClient.Stub(r => r.Execute(request)).Return(response);
+
+            Assert.Throws<BeaconpushException>(() => channel.Users());
         }
 
         private TestChannel GetChannel(string name)

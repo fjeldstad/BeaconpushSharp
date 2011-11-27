@@ -28,17 +28,15 @@ namespace BeaconpushSharp.Core
         {
             var request = RequestFactory.CreateIsUserOnlineRequest(Username);
             var response = RestClient.Execute(request);
-            if (response.Status == HttpStatusCode.OK)
-            {
-                return true;
-            }
-            return false;
+            ThrowOnUnexpectedStatusCode(response, HttpStatusCode.OK, HttpStatusCode.NotFound);
+            return response.Status == HttpStatusCode.OK;
         }
 
         public void ForceSignOut()
         {
             var request = RequestFactory.CreateForceUserSignOutRequest(Username);
-            RestClient.Execute(request);
+            var response = RestClient.Execute(request);
+            ThrowOnUnexpectedStatusCode(response, HttpStatusCode.NoContent, HttpStatusCode.OK);
         }
 
         public void Send(object message)
@@ -49,7 +47,8 @@ namespace BeaconpushSharp.Core
             }
             var data = JsonSerializer.Serialize(message);
             var request = RequestFactory.CreateSendMessageToUserRequest(Username, data);
-            RestClient.Execute(request);
+            var response = RestClient.Execute(request);
+            ThrowOnUnexpectedStatusCode(response);
         }
     }
 }

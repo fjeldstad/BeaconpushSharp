@@ -33,13 +33,15 @@ namespace BeaconpushSharp.Core
             }
             var data = JsonSerializer.Serialize(message);
             var request = RequestFactory.CreateSendMessageToChannelRequest(Name, data);
-            RestClient.Execute(request);
+            var response = RestClient.Execute(request);
+            ThrowOnUnexpectedStatusCode(response);
         }
 
         public IUser[] Users()
         {
             var request = RequestFactory.CreateUsersInChannelRequest(Name);
             var response = RestClient.Execute(request);
+            ThrowOnUnexpectedStatusCode(response);
             var data = JsonSerializer.Deserialize<UsersInChannelData>(response.Body);
             return data.users.Select(username => new User(username, RequestFactory, JsonSerializer, RestClient)).ToArray();
         }

@@ -48,7 +48,7 @@ namespace BeaconpushSharp.Core
         protected virtual IRequest CreateRequest(HttpVerb method, string resource, string body) 
         {
             var request = new Request();
-            request.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+            request.Headers.Add("Content-Type", "application/json");
             request.Headers.Add("X-Beacon-Secret-Key", SecretKey);
             request.Method = method;
             request.Url = new Uri(BaseUrl + ApiKey + "/" + resource.Replace("//", "/"));
