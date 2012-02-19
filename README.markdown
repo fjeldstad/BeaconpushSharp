@@ -9,7 +9,7 @@ Examples
 --------
 
     // Create a Beaconpush client
-    var beacon = new Beacon("myApiKey", "mySecretKey");
+    var beacon = new Beacon("myApiKey", "mySecretKey", "http://api.beaconpush.com/1.0.0/");
     
     // Enumerate through all the users in a channel
     IUser[] users = beacon.Channel("myChannel").Users();

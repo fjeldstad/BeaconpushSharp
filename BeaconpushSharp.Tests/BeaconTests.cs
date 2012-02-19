@@ -28,10 +28,12 @@ namespace BeaconpushSharp.Tests
         [Test]
         public void ConstructorThrowsOnNullArguments()
         {
-            Assert.Throws<ArgumentNullException>(() => new Beacon(null, "test"));
-            Assert.Throws<ArgumentNullException>(() => new Beacon(string.Empty, "test"));
-            Assert.Throws<ArgumentNullException>(() => new Beacon("test", null));
-            Assert.Throws<ArgumentNullException>(() => new Beacon("test", string.Empty));
+            Assert.Throws<ArgumentNullException>(() => new Beacon(null, "test", "http://example.com"));
+            Assert.Throws<ArgumentNullException>(() => new Beacon(string.Empty, "test", "http://example.com"));
+            Assert.Throws<ArgumentNullException>(() => new Beacon("test", null, "http://example.com"));
+            Assert.Throws<ArgumentNullException>(() => new Beacon("test", string.Empty, "http://example.com"));
+            Assert.Throws<ArgumentNullException>(() => new Beacon("test", "test", null));
+            Assert.Throws<ArgumentNullException>(() => new Beacon("test", "test", string.Empty));
         }
 
         [Test]
@@ -157,8 +159,8 @@ namespace BeaconpushSharp.Tests
                 get { return base.RestClient; }
             }
 
-            public TestBeacon(string apiKey, string secretKey)
-                : base(apiKey, secretKey)
+            public TestBeacon(string apiKey, string secretKey, string baseUrl)
+                : base(apiKey, secretKey, baseUrl)
             {
             }
 

@@ -10,40 +10,48 @@ namespace BeaconpushSharp.Tests.Core
         [Test]
         public void ConstructorThrowsOnNullArguments()
         {
-            Assert.Throws<ArgumentNullException>(() => new RequestFactory(null, "test"));
-            Assert.Throws<ArgumentNullException>(() => new RequestFactory(string.Empty, "test"));
-            Assert.Throws<ArgumentNullException>(() => new RequestFactory("test", null));
-            Assert.Throws<ArgumentNullException>(() => new RequestFactory("test", string.Empty));
+            Assert.Throws<ArgumentNullException>(() => new RequestFactory(null, "test", "test"));
+            Assert.Throws<ArgumentNullException>(() => new RequestFactory(string.Empty, "test", "test"));
+            Assert.Throws<ArgumentNullException>(() => new RequestFactory("test", null, "test"));
+            Assert.Throws<ArgumentNullException>(() => new RequestFactory("test", string.Empty, "test"));
+            Assert.Throws<ArgumentNullException>(() => new RequestFactory("test", "test", null));
+            Assert.Throws<ArgumentNullException>(() => new RequestFactory("test", "test", string.Empty));
         }
 
         [Test]
         public void ConstructorSetsProperties()
         {
-            var requestFactory = new TestRequestFactory("apiKey", "secretKey");
+            var baseUrl = "http://example.com";
+            var apiKey = "apiKey";
+            var secretKey = "secretKey";
+            var requestFactory = new TestRequestFactory(apiKey, secretKey, baseUrl);
 
-            Assert.That(requestFactory.ApiKey, Is.EqualTo("apiKey"));
-            Assert.That(requestFactory.SecretKey, Is.EqualTo("secretKey"));
+            Assert.That(requestFactory.ApiKey, Is.EqualTo(apiKey));
+            Assert.That(requestFactory.SecretKey, Is.EqualTo(secretKey));
+            Assert.That(requestFactory.BaseUrl, Is.EqualTo(baseUrl));
         }
 
         [Test]
         public void CreateOnlineUserCountRequestReturnsCorrectRequest()
         {
-            var requestFactory = new RequestFactory("apiKey", "secretKey");
+            var baseUrl = "http://example.com";
+            var apiKey = "apiKey";
+            var secretKey = "secretKey";
+            var requestFactory = new RequestFactory(apiKey, secretKey, baseUrl);
 
             var request = requestFactory.CreateOnlineUserCountRequest();
 
-            request.AssertCorrectBaseUrl();
+            request.AssertCorrectSecret(secretKey);
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.GET);
-            request.AssertCorrectCredentials("apiKey", "secretKey");
-            request.AssertCorrectPath("apiKey", "users");
+            request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "users");
             Assert.That(request.Body.IsNullOrEmpty());
         }
 
         [Test]
         public void CreateIsUserOnlineRequestThrowsOnNullArguments()
         {
-            var requestFactory = new RequestFactory("apiKey", "secretKey");
+            var requestFactory = new RequestFactory("apiKey", "secretKey", "http://example.com");
 
             Assert.Throws<ArgumentNullException>(() => requestFactory.CreateIsUserOnlineRequest(null));
             Assert.Throws<ArgumentNullException>(() => requestFactory.CreateIsUserOnlineRequest(string.Empty));
@@ -52,22 +60,24 @@ namespace BeaconpushSharp.Tests.Core
         [Test]
         public void CreateIsUserOnlineRequestReturnsCorrectRequest()
         {
-            var requestFactory = new RequestFactory("apiKey", "secretKey");
+            var baseUrl = "http://example.com";
+            var apiKey = "apiKey";
+            var secretKey = "secretKey";
+            var requestFactory = new RequestFactory(apiKey, secretKey, baseUrl);
 
             var request = requestFactory.CreateIsUserOnlineRequest("username");
 
-            request.AssertCorrectBaseUrl();
+            request.AssertCorrectSecret(secretKey);
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.GET);
-            request.AssertCorrectCredentials("apiKey", "secretKey");
-            request.AssertCorrectPath("apiKey", "users/username");
+            request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "users/username");
             Assert.That(request.Body.IsNullOrEmpty());
         }
 
         [Test]
         public void CreateForceUserSignOutRequestThrowsOnNullArguments()
         {
-            var requestFactory = new RequestFactory("apiKey", "secretKey");
+            var requestFactory = new RequestFactory("apiKey", "secretKey", "http://example.com");
 
             Assert.Throws<ArgumentNullException>(() => requestFactory.CreateForceUserSignOutRequest(null));
             Assert.Throws<ArgumentNullException>(() => requestFactory.CreateForceUserSignOutRequest(string.Empty));
@@ -76,22 +86,24 @@ namespace BeaconpushSharp.Tests.Core
         [Test]
         public void CreateForceUserSignOutRequestReturnsCorrectRequest()
         {
-            var requestFactory = new RequestFactory("apiKey", "secretKey");
+            var baseUrl = "http://example.com";
+            var apiKey = "apiKey";
+            var secretKey = "secretKey";
+            var requestFactory = new RequestFactory(apiKey, secretKey, baseUrl);
 
             var request = requestFactory.CreateForceUserSignOutRequest("username");
 
-            request.AssertCorrectBaseUrl();
+            request.AssertCorrectSecret(secretKey);
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.DELETE);
-            request.AssertCorrectCredentials("apiKey", "secretKey");
-            request.AssertCorrectPath("apiKey", "users/username");
+            request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "users/username");
             Assert.That(request.Body.IsNullOrEmpty());
         }
 
         [Test]
         public void CreateSendMessageToUserRequestThrowsOnNullArguments()
         {
-            var requestFactory = new RequestFactory("apiKey", "secretKey");
+            var requestFactory = new RequestFactory("apiKey", "secretKey", "http://example.com");
 
             Assert.Throws<ArgumentNullException>(() => requestFactory.CreateSendMessageToUserRequest(null, "message"));
             Assert.Throws<ArgumentNullException>(() => requestFactory.CreateSendMessageToUserRequest(string.Empty, "message"));
@@ -102,22 +114,24 @@ namespace BeaconpushSharp.Tests.Core
         [Test]
         public void CreateSendMessageToUserRequestReturnsCorrectRequest()
         {
-            var requestFactory = new RequestFactory("apiKey", "secretKey");
+            var baseUrl = "http://example.com";
+            var apiKey = "apiKey";
+            var secretKey = "secretKey";
+            var requestFactory = new RequestFactory(apiKey, secretKey, baseUrl);
 
             var request = requestFactory.CreateSendMessageToUserRequest("username", "message");
 
-            request.AssertCorrectBaseUrl();
+            request.AssertCorrectSecret(secretKey);
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.POST);
-            request.AssertCorrectCredentials("apiKey", "secretKey");
-            request.AssertCorrectPath("apiKey", "users/username");
+            request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "users/username");
             Assert.That(request.Body, Is.EqualTo("message"));
         }
 
         [Test]
         public void CreateUsersInChannelRequestThrowsOnNullArguments()
         {
-            var requestFactory = new RequestFactory("apiKey", "secretKey");
+            var requestFactory = new RequestFactory("apiKey", "secretKey", "http://example.com");
 
             Assert.Throws<ArgumentNullException>(() => requestFactory.CreateUsersInChannelRequest(null));
             Assert.Throws<ArgumentNullException>(() => requestFactory.CreateUsersInChannelRequest(string.Empty));
@@ -126,22 +140,24 @@ namespace BeaconpushSharp.Tests.Core
         [Test]
         public void CreateUsersInChannelRequestReturnsCorrectRequest()
         {
-            var requestFactory = new RequestFactory("apiKey", "secretKey");
+            var baseUrl = "http://example.com";
+            var apiKey = "apiKey";
+            var secretKey = "secretKey";
+            var requestFactory = new RequestFactory(apiKey, secretKey, baseUrl);
 
             var request = requestFactory.CreateUsersInChannelRequest("name");
 
-            request.AssertCorrectBaseUrl();
+            request.AssertCorrectSecret(secretKey);
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.GET);
-            request.AssertCorrectCredentials("apiKey", "secretKey");
-            request.AssertCorrectPath("apiKey", "channels/name");
+            request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "channels/name");
             Assert.That(request.Body.IsNullOrEmpty());
         }
 
         [Test]
         public void CreateSendMessageToChannelRequestThrowsOnNullArguments()
         {
-            var requestFactory = new RequestFactory("apiKey", "secretKey");
+            var requestFactory = new RequestFactory("apiKey", "secretKey", "http://example.com");
 
             Assert.Throws<ArgumentNullException>(() => requestFactory.CreateSendMessageToChannelRequest(null, "message"));
             Assert.Throws<ArgumentNullException>(() => requestFactory.CreateSendMessageToChannelRequest(string.Empty, "message"));
@@ -152,15 +168,17 @@ namespace BeaconpushSharp.Tests.Core
         [Test]
         public void CreateSendMessageToChannelRequestReturnsCorrectRequest()
         {
-            var requestFactory = new RequestFactory("apiKey", "secretKey");
+            var baseUrl = "http://example.com";
+            var apiKey = "apiKey";
+            var secretKey = "secretKey";
+            var requestFactory = new RequestFactory(apiKey, secretKey, baseUrl);
 
             var request = requestFactory.CreateSendMessageToChannelRequest("name", "message");
 
-            request.AssertCorrectBaseUrl();
+            request.AssertCorrectSecret(secretKey);
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.POST);
-            request.AssertCorrectCredentials("apiKey", "secretKey");
-            request.AssertCorrectPath("apiKey", "channels/name");
+            request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "channels/name");
             Assert.That(request.Body, Is.EqualTo("message"));
         }
 
@@ -176,8 +194,13 @@ namespace BeaconpushSharp.Tests.Core
                 get { return base.SecretKey; }
             }
 
-            public TestRequestFactory(string apiKey, string secretKey)
-                : base(apiKey, secretKey)
+            public new string BaseUrl
+            {
+                get { return base.BaseUrl; }
+            }
+
+            public TestRequestFactory(string apiKey, string secretKey, string baseUrl)
+                : base(apiKey, secretKey, baseUrl)
             {
             }
         }

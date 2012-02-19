@@ -5,17 +5,9 @@ namespace BeaconpushSharp.Tests.Core
 {
     public static class IRequestExtensions
     {
-        private static string _baseUrl = "http://api.beaconpush.com/1.0.0/";
-
-        public static void AssertCorrectBaseUrl(this IRequest request)
-        {
-            Assert.That(request.Url.ToString().StartsWith(_baseUrl));
-        }
-
-        public static void AssertCorrectCredentials(this IRequest request, string apiKey, string secretKey)
+        public static void AssertCorrectSecret(this IRequest request, string secretKey)
         {
             Assert.That(request.Headers["X-Beacon-Secret-Key"], Is.EqualTo(secretKey));
-            Assert.That(request.Url.ToString().StartsWith(_baseUrl + apiKey + "/"));
         }
 
         public static void AssertCorrectContentType(this IRequest request)
@@ -23,9 +15,10 @@ namespace BeaconpushSharp.Tests.Core
             Assert.That(request.Headers["Content-Type"], Is.EqualTo("application/json"));
         }
 
-        public static void AssertCorrectPath(this IRequest request, string apiKey, string expectedPath)
+        public static void AssertCorrectUrl(this IRequest request, string baseUrl, string apiKey, string secretKey, string expectedPath)
         {
-            Assert.That(request.Url.ToString(), Is.EqualTo(_baseUrl + apiKey + "/" + expectedPath));
+            var expectedUrl = string.Format("{0}/{1}/{2}", baseUrl.TrimEnd('/'), apiKey, expectedPath.Replace("//", "/").TrimStart('/').TrimEnd('/'));
+            Assert.That(request.Url.ToString(), Is.EqualTo(expectedUrl));
         }
 
         public static void AssertCorrectMethod(this IRequest request, HttpVerb method)

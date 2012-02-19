@@ -10,7 +10,11 @@
     <projectUrl>https://github.com/Hihaj/BeaconpushSharp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <copyright>Copyright 2011 Anders Fjeldstad</copyright>
+    <copyright>Copyright 2012 Anders Fjeldstad</copyright>
     <tags>Beaconpush WebSockets long-polling push</tags>
+    <releaseNotes>
+      Breaking change: the Beacon constructor now takes the base url of the service as an argument.
+      This change was introduced as a result of the cloud-hosted Beaconpush service being discontinued.
+    </releaseNotes>
   </metadata>
 </package>

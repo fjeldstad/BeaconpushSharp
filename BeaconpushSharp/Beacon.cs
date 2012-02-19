@@ -6,8 +6,8 @@ namespace BeaconpushSharp
 {
     public class Beacon : EntityBase, IBeacon
     {
-        public Beacon(string apiKey, string secretKey)
-            : this(new RequestFactory(apiKey, secretKey), new DefaultJsonSerializer(), new RestClient())
+        public Beacon(string apiKey, string secretKey, string baseUrl)
+            : this(new RequestFactory(apiKey, secretKey, baseUrl), new DefaultJsonSerializer(), new RestClient())
         {
         }
 

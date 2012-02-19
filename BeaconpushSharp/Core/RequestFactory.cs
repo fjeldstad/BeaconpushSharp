@@ -6,10 +6,9 @@ namespace BeaconpushSharp.Core
 {
     public class RequestFactory : IRequestFactory
     {
-        protected static readonly string BaseUrl = "http://api.beaconpush.com/1.0.0/";
-
         private readonly string _apiKey;
         private readonly string _secretKey;
+        private readonly string _baseUrl;
 
         protected string ApiKey
         {
@@ -21,7 +20,12 @@ namespace BeaconpushSharp.Core
             get { return _secretKey; }
         }
 
-        public RequestFactory(string apiKey, string secretKey)
+        protected string BaseUrl
+        {
+            get { return _baseUrl; }
+        }
+
+        public RequestFactory(string apiKey, string secretKey, string baseUrl)
         {
             if (apiKey.IsNullOrEmpty())
             {
@@ -31,8 +35,13 @@ namespace BeaconpushSharp.Core
             {
                 throw new ArgumentNullException("secretKey");
             }
+            if (baseUrl.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("baseUrl");
+            }
             _apiKey = apiKey;
             _secretKey = secretKey;
+            _baseUrl = baseUrl;
         }
 
         protected virtual IRequest CreateRequest(string resource)
@@ -45,13 +54,13 @@ namespace BeaconpushSharp.Core
             return CreateRequest(method, resource, null);
         }
 
-        protected virtual IRequest CreateRequest(HttpVerb method, string resource, string body) 
+        protected virtual IRequest CreateRequest(HttpVerb method, string resource, string body)
         {
             var request = new Request();
             request.Headers.Add("Content-Type", "application/json");
             request.Headers.Add("X-Beacon-Secret-Key", SecretKey);
             request.Method = method;
-            request.Url = new Uri(BaseUrl + ApiKey + "/" + resource.Replace("//", "/"));
+            request.Url = new Uri(BaseUrl.TrimEnd('/') + "/" + ApiKey + "/" + resource.Replace("//", "/").TrimStart('/'));
             request.Body = body;
             return request;
         }
