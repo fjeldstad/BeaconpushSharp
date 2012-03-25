@@ -12,7 +12,7 @@ namespace BeaconpushSharp.Core
         public User(string username, IRequestFactory requestFactory, IJsonSerializer jsonSerializer, IRestClient restClient)
             : base(requestFactory, jsonSerializer, restClient)
         {
-            if (username.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(username))
             {
                 throw new ArgumentNullException("username");
             }

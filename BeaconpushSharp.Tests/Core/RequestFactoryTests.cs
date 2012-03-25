@@ -45,7 +45,7 @@ namespace BeaconpushSharp.Tests.Core
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.GET);
             request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "users");
-            Assert.That(request.Body.IsNullOrEmpty());
+            Assert.That(string.IsNullOrEmpty(request.Body));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace BeaconpushSharp.Tests.Core
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.GET);
             request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "users/username");
-            Assert.That(request.Body.IsNullOrEmpty());
+            Assert.That(string.IsNullOrEmpty(request.Body));
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace BeaconpushSharp.Tests.Core
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.DELETE);
             request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "users/username");
-            Assert.That(request.Body.IsNullOrEmpty());
+            Assert.That(string.IsNullOrEmpty(request.Body));
         }
 
         [Test]
@@ -151,7 +151,7 @@ namespace BeaconpushSharp.Tests.Core
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.GET);
             request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "channels/name");
-            Assert.That(request.Body.IsNullOrEmpty());
+            Assert.That(string.IsNullOrEmpty(request.Body));
         }
 
         [Test]

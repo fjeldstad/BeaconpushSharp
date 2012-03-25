@@ -27,15 +27,15 @@ namespace BeaconpushSharp.Core
 
         public RequestFactory(string apiKey, string secretKey, string baseUrl)
         {
-            if (apiKey.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(apiKey))
             {
                 throw new ArgumentNullException("apiKey");
             }
-            if (secretKey.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(secretKey))
             {
                 throw new ArgumentNullException("secretKey");
             }
-            if (baseUrl.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(baseUrl))
             {
                 throw new ArgumentNullException("baseUrl");
             }
@@ -72,7 +72,7 @@ namespace BeaconpushSharp.Core
 
         public IRequest CreateIsUserOnlineRequest(string username)
         {
-            if (username.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(username))
             {
                 throw new ArgumentNullException("username");
             }
@@ -81,7 +81,7 @@ namespace BeaconpushSharp.Core
 
         public IRequest CreateForceUserSignOutRequest(string username)
         {
-            if (username.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(username))
             {
                 throw new ArgumentNullException("username");
             }
@@ -90,11 +90,11 @@ namespace BeaconpushSharp.Core
 
         public IRequest CreateSendMessageToUserRequest(string username, string message)
         {
-            if (username.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(username))
             {
                 throw new ArgumentNullException("username");
             }
-            if (message.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(message))
             {
                 throw new ArgumentNullException("message");
             }
@@ -104,7 +104,7 @@ namespace BeaconpushSharp.Core
 
         public IRequest CreateUsersInChannelRequest(string name)
         {
-            if (name.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException("name");
             }
@@ -113,11 +113,11 @@ namespace BeaconpushSharp.Core
 
         public IRequest CreateSendMessageToChannelRequest(string name, string message)
         {
-            if (name.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException("name");
             }
-            if (message.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(message))
             {
                 throw new ArgumentNullException("message");
             }

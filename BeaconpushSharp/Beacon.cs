@@ -26,7 +26,7 @@ namespace BeaconpushSharp
 
         public IChannel Channel(string name)
         {
-            if (name.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException("name");
             }
@@ -35,7 +35,7 @@ namespace BeaconpushSharp
 
         public IUser User(string username)
         {
-            if (username.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(username))
             {
                 throw new ArgumentNullException("username");
             }

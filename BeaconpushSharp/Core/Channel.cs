@@ -13,7 +13,7 @@ namespace BeaconpushSharp.Core
         public Channel(string name, IRequestFactory requestFactory, IJsonSerializer jsonSerializer, IRestClient restClient)
             : base(requestFactory, jsonSerializer, restClient)
         {
-            if (name.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException("name");
             }

@@ -67,7 +67,6 @@
     <Compile Include="ResponseData\ErrorData.cs" />
     <Compile Include="ResponseData\OnlineUserCountData.cs" />
     <Compile Include="ResponseData\UsersInChannelData.cs" />
-    <Compile Include="StringExtensions.cs" />
     <Compile Include="Core\User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

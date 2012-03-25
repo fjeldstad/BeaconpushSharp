@@ -21,7 +21,7 @@ namespace BeaconpushSharp.Core
             var httpRequest = (HttpWebRequest)WebRequest.Create(request.Url);
             httpRequest.Method = request.Method.ToString();
             SetHeaders(httpRequest, request.Headers);
-            if (!request.Body.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(request.Body))
             {
                 var bodyBytes = Encoding.UTF8.GetBytes(request.Body);
                 using (var requestStream = httpRequest.GetRequestStream())
