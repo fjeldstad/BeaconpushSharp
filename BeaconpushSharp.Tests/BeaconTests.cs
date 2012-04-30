@@ -26,14 +26,21 @@ namespace BeaconpushSharp.Tests
         }
 
         [Test]
-        public void ConstructorThrowsOnNullArguments()
+        public void CloudConstructorThrowsOnNullArguments()
         {
             Assert.Throws<ArgumentNullException>(() => new Beacon(null, "test", "http://example.com"));
             Assert.Throws<ArgumentNullException>(() => new Beacon(string.Empty, "test", "http://example.com"));
-            Assert.Throws<ArgumentNullException>(() => new Beacon("test", null, "http://example.com"));
-            Assert.Throws<ArgumentNullException>(() => new Beacon("test", string.Empty, "http://example.com"));
             Assert.Throws<ArgumentNullException>(() => new Beacon("test", "test", null));
             Assert.Throws<ArgumentNullException>(() => new Beacon("test", "test", string.Empty));
+        }
+
+        [Test]
+        public void OnSiteConstructorThrowsOnNullArguments()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Beacon(null, "http://example.com"));
+            Assert.Throws<ArgumentNullException>(() => new Beacon(string.Empty, "http://example.com"));
+            Assert.Throws<ArgumentNullException>(() => new Beacon("test", null));
+            Assert.Throws<ArgumentNullException>(() => new Beacon("test", string.Empty));
         }
 
         [Test]

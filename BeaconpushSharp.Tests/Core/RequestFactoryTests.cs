@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BeaconpushSharp.Core;
 using NUnit.Framework;
 
@@ -8,18 +9,25 @@ namespace BeaconpushSharp.Tests.Core
     public class RequestFactoryTests
     {
         [Test]
-        public void ConstructorThrowsOnNullArguments()
+        public void CloudConstructorThrowsOnNullArguments()
         {
             Assert.Throws<ArgumentNullException>(() => new RequestFactory(null, "test", "test"));
             Assert.Throws<ArgumentNullException>(() => new RequestFactory(string.Empty, "test", "test"));
-            Assert.Throws<ArgumentNullException>(() => new RequestFactory("test", null, "test"));
-            Assert.Throws<ArgumentNullException>(() => new RequestFactory("test", string.Empty, "test"));
             Assert.Throws<ArgumentNullException>(() => new RequestFactory("test", "test", null));
             Assert.Throws<ArgumentNullException>(() => new RequestFactory("test", "test", string.Empty));
         }
 
         [Test]
-        public void ConstructorSetsProperties()
+        public void OnSiteConstructorThrowsOnNullArguments()
+        {
+            Assert.Throws<ArgumentNullException>(() => new RequestFactory(null, "test"));
+            Assert.Throws<ArgumentNullException>(() => new RequestFactory(string.Empty, "test"));
+            Assert.Throws<ArgumentNullException>(() => new RequestFactory("test", null));
+            Assert.Throws<ArgumentNullException>(() => new RequestFactory("test", string.Empty));
+        }
+
+        [Test]
+        public void CloudConstructorSetsProperties()
         {
             var baseUrl = "http://example.com";
             var apiKey = "apiKey";
@@ -29,6 +37,29 @@ namespace BeaconpushSharp.Tests.Core
             Assert.That(requestFactory.ApiKey, Is.EqualTo(apiKey));
             Assert.That(requestFactory.SecretKey, Is.EqualTo(secretKey));
             Assert.That(requestFactory.BaseUrl, Is.EqualTo(baseUrl));
+        }
+
+        [Test]
+        public void OnSiteConstructorSetsProperties()
+        {
+            var baseUrl = "http://example.com";
+            var operatorId = "operatorId";
+            var requestFactory = new TestRequestFactory(operatorId, baseUrl);
+
+            Assert.That(requestFactory.OperatorId, Is.EqualTo(operatorId));
+            Assert.That(requestFactory.BaseUrl, Is.EqualTo(baseUrl));
+        }
+
+        [Test]
+        public void AuthHeaderIsNotSetWhenSecretKeyIsNullOrEmpty()
+        {
+            var baseUrl = "http://example.com";
+            var operatorId = "operatorId";
+            var requestFactory = new TestRequestFactory(operatorId, baseUrl);
+
+            var request = requestFactory.CreateOnlineUserCountRequest();
+
+            Assert.That(!request.Headers.AllKeys.Contains("X-Beacon-Secret-Key"));
         }
 
         [Test]
@@ -44,7 +75,7 @@ namespace BeaconpushSharp.Tests.Core
             request.AssertCorrectSecret(secretKey);
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.GET);
-            request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "users");
+            request.AssertCorrectUrl(baseUrl, apiKey, "users");
             Assert.That(string.IsNullOrEmpty(request.Body));
         }
 
@@ -70,7 +101,7 @@ namespace BeaconpushSharp.Tests.Core
             request.AssertCorrectSecret(secretKey);
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.GET);
-            request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "users/username");
+            request.AssertCorrectUrl(baseUrl, apiKey, "users/username");
             Assert.That(string.IsNullOrEmpty(request.Body));
         }
 
@@ -96,7 +127,7 @@ namespace BeaconpushSharp.Tests.Core
             request.AssertCorrectSecret(secretKey);
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.DELETE);
-            request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "users/username");
+            request.AssertCorrectUrl(baseUrl, apiKey, "users/username");
             Assert.That(string.IsNullOrEmpty(request.Body));
         }
 
@@ -124,7 +155,7 @@ namespace BeaconpushSharp.Tests.Core
             request.AssertCorrectSecret(secretKey);
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.POST);
-            request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "users/username");
+            request.AssertCorrectUrl(baseUrl, apiKey, "users/username");
             Assert.That(request.Body, Is.EqualTo("message"));
         }
 
@@ -150,7 +181,7 @@ namespace BeaconpushSharp.Tests.Core
             request.AssertCorrectSecret(secretKey);
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.GET);
-            request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "channels/name");
+            request.AssertCorrectUrl(baseUrl, apiKey, "channels/name");
             Assert.That(string.IsNullOrEmpty(request.Body));
         }
 
@@ -178,12 +209,17 @@ namespace BeaconpushSharp.Tests.Core
             request.AssertCorrectSecret(secretKey);
             request.AssertCorrectContentType();
             request.AssertCorrectMethod(HttpVerb.POST);
-            request.AssertCorrectUrl(baseUrl, apiKey, secretKey, "channels/name");
+            request.AssertCorrectUrl(baseUrl, apiKey, "channels/name");
             Assert.That(request.Body, Is.EqualTo("message"));
         }
 
         private class TestRequestFactory : RequestFactory
         {
+            public new string OperatorId
+            {
+                get { return base.OperatorId; }
+            }
+
             public new string ApiKey
             {
                 get { return base.ApiKey; }
@@ -201,6 +237,11 @@ namespace BeaconpushSharp.Tests.Core
 
             public TestRequestFactory(string apiKey, string secretKey, string baseUrl)
                 : base(apiKey, secretKey, baseUrl)
+            {
+            }
+
+            public TestRequestFactory(string operatorId, string baseUrl)
+                : base(operatorId, baseUrl)
             {
             }
         }

@@ -11,6 +11,11 @@ namespace BeaconpushSharp
         {
         }
 
+        public Beacon(string operatorId, string baseUrl)
+            : this(new RequestFactory(operatorId, baseUrl), new DefaultJsonSerializer(), new RestClient())
+        {
+        }
+
         public Beacon(IRequestFactory requestFactory, IJsonSerializer jsonSerializer, IRestClient restClient)
             : base(requestFactory, jsonSerializer, restClient)
         {

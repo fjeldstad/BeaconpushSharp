@@ -24,6 +24,7 @@ namespace BeaconpushSharp.Core
             if (!string.IsNullOrEmpty(request.Body))
             {
                 var bodyBytes = Encoding.UTF8.GetBytes(request.Body);
+                httpRequest.ContentLength = bodyBytes.Length;
                 using (var requestStream = httpRequest.GetRequestStream())
                 {
                     requestStream.Write(bodyBytes, 0, bodyBytes.Length);
@@ -48,15 +49,12 @@ namespace BeaconpushSharp.Core
             }
 
             response.Status = httpResponse.StatusCode;
-            if (httpResponse.ContentLength > 0)
+            using (var responseStream = httpResponse.GetResponseStream())
             {
-                using (var responseStream = httpResponse.GetResponseStream())
+                if (responseStream != null)
                 {
-                    if (responseStream != null)
-                    {
-                        var reader = new StreamReader(responseStream, Encoding.UTF8);
-                        response.Body = reader.ReadToEnd();
-                    }
+                    var reader = new StreamReader(responseStream, Encoding.UTF8);
+                    response.Body = reader.ReadToEnd();
                 }
             }
 

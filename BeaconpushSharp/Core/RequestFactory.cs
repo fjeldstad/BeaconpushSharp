@@ -6,13 +6,18 @@ namespace BeaconpushSharp.Core
 {
     public class RequestFactory : IRequestFactory
     {
-        private readonly string _apiKey;
+        private readonly string _apiKeyOrOperatorId;
         private readonly string _secretKey;
         private readonly string _baseUrl;
 
+        protected string OperatorId
+        {
+            get { return _apiKeyOrOperatorId; }
+        }
+
         protected string ApiKey
         {
-            get { return _apiKey; }
+            get { return _apiKeyOrOperatorId; }
         }
 
         protected string SecretKey
@@ -31,16 +36,26 @@ namespace BeaconpushSharp.Core
             {
                 throw new ArgumentNullException("apiKey");
             }
-            if (string.IsNullOrEmpty(secretKey))
+            if (string.IsNullOrEmpty(baseUrl))
             {
-                throw new ArgumentNullException("secretKey");
+                throw new ArgumentNullException("baseUrl");
+            }
+            _apiKeyOrOperatorId = apiKey;
+            _secretKey = secretKey;
+            _baseUrl = baseUrl;
+        }
+
+        public RequestFactory(string operatorId, string baseUrl)
+        {
+            if (string.IsNullOrEmpty(operatorId))
+            {
+                throw new ArgumentNullException("operatorId");
             }
             if (string.IsNullOrEmpty(baseUrl))
             {
                 throw new ArgumentNullException("baseUrl");
             }
-            _apiKey = apiKey;
-            _secretKey = secretKey;
+            _apiKeyOrOperatorId = operatorId;
             _baseUrl = baseUrl;
         }
 
@@ -58,7 +73,10 @@ namespace BeaconpushSharp.Core
         {
             var request = new Request();
             request.Headers.Add("Content-Type", "application/json");
-            request.Headers.Add("X-Beacon-Secret-Key", SecretKey);
+            if (!string.IsNullOrEmpty(SecretKey))
+            {
+                request.Headers.Add("X-Beacon-Secret-Key", SecretKey);
+            }
             request.Method = method;
             request.Url = new Uri(BaseUrl.TrimEnd('/') + "/" + ApiKey + "/" + resource.Replace("//", "/").TrimStart('/'));
             request.Body = body;

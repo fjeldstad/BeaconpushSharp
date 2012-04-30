@@ -15,7 +15,7 @@ namespace BeaconpushSharp.Tests.Core
             Assert.That(request.Headers["Content-Type"], Is.EqualTo("application/json"));
         }
 
-        public static void AssertCorrectUrl(this IRequest request, string baseUrl, string apiKey, string secretKey, string expectedPath)
+        public static void AssertCorrectUrl(this IRequest request, string baseUrl, string apiKey, string expectedPath)
         {
             var expectedUrl = string.Format("{0}/{1}/{2}", baseUrl.TrimEnd('/'), apiKey, expectedPath.Replace("//", "/").TrimStart('/').TrimEnd('/'));
             Assert.That(request.Url.ToString(), Is.EqualTo(expectedUrl));
